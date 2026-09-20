@@ -1,8 +1,7 @@
-# muos-rg35xx-sp-picori
+# minish-cap-port-trimui-knulli
 
-PortMaster packaging for [Project Picori](https://github.com/999sian/tmc), the
-PC port of *The Legend of Zelda: The Minish Cap*. The player-facing README is
-[`port/README.md`](port/README.md).
+PortMaster packaging of [Project Picori](https://github.com/999sian/tmc) (*The Legend of Zelda: The Minish Cap* native PC port), tailored and tested for the **Trimui Smart Pro** running **KNULLI OS** (Allwinner A133P / aarch64 / 1280×720).
+The player-facing README is [`port/README.md`](port/README.md).
 
 ![The Minish Cap running on an RG35XX SP](docs/img/social-preview.png)
 
