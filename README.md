@@ -12,7 +12,7 @@ PortMaster packaging of [Project Picori](https://github.com/999sian/tmc) (*The L
 ### 💡 What is this project? (Explained Simply)
 Normally, retro handheld consoles run Game Boy Advance games using an **emulator** (software that simulates the entire original GBA hardware).
 
-This project is **different — it is a Native PC/Handheld Port**:
+This project is an **adaptation for handheld consoles of the native PC port** ([Project Picori](https://github.com/999sian/tmc)):
 * **Native Execution**: The original game code was decompiled and rebuilt to run **directly on the Trimui Smart Pro's ARM processor**, exactly like a native PC game, without needing any emulator.
 * **Why is that cool?**: It runs as a standalone app via **PortMaster**, allowing custom 4× integer scaling (960×640) for crisp, sharp visuals on the 720p screen without blurry bilinear stretching.
 * **Why do I still need a ROM?**: To respect Nintendo's intellectual property, this repository contains **only the open-source game engine**. No game graphics, music, or text are distributed here. When you provide your own GBA ROM once, the engine extracts the assets locally on your console and boots straight into the adventure!
@@ -66,7 +66,7 @@ Configured via `gptokeyb2`:
 ### 💡 O que é este projeto? (Explicado de forma simples)
 Normalmente, consoles portáteis como o Trimui Smart Pro rodam jogos de Game Boy Advance através de um **emulador** (um programa que imita o videogame antigo rodando por cima do sistema).
 
-Este projeto é **diferente — é um Port Nativo**:
+Este projeto é uma **adaptação para consoles portáteis a partir do port nativo de PC** ([Project Picori](https://github.com/999sian/tmc)):
 * **Sem emulador**: O código-fonte original de *The Legend of Zelda: The Minish Cap* foi reconstruído por engenharia reversa (descompilação) e recompilado para rodar **diretamente no processador do Trimui Smart Pro**, como se fosse um jogo de PC feito nativamente para ele.
 * **Qual a vantagem?**: Ele roda como um jogo próprio via **PortMaster**, aproveitando a tela de 1280×720 com resolução pixel-perfect (escala 4× de 960×640), deixando a imagem super nítida e sem o borrão de estiramento dos emuladores.
 * **Por que ainda preciso da ROM?**: Por respeito aos direitos autorais da Nintendo, este projeto disponibiliza **apenas o motor do jogo (código)**. Nenhuma imagem, música ou texto protegido está incluso. Ao colocar sua própria ROM do jogo uma única vez, o motor extrai os arquivos necessários diretamente no aparelho e inicia a aventura!
@@ -135,6 +135,18 @@ Dockerfile.arm64-bullseye               Debian bullseye builder container (glibc
 * **Engine**: `tmc_pc` é um executável SDL3 nativo compilado para `linux-arm64` a partir da branch `rg35xx-sp-audio-ui` do [lorencouse/tmc](https://github.com/lorencouse/tmc).
 * **Compatibilidade**: Os portáteis usam SDL2 nativo. O pacote inclui o shim `libSDL3.so.0` para traduzir as chamadas da SDL3 diretamente para a SDL2 do Knulli em tempo de execução.
 * **Resolução**: Em telas 1280×720 (Trimui Smart Pro), o launcher ativa automaticamente o **integer scaling 4×** (960×640) com pixels perfeitos e sem borrão bilinear.
+
+## 👥 Credits & Acknowledgements / Créditos e Agradecimentos
+
+This project is an adaptation of the incredible work done by the open-source decompilation and reverse-engineering community. All credit goes to the original authors:
+
+* **[zeldaret/tmc](https://github.com/zeldaret/tmc)**: The decompilation team who painstakingly reverse-engineered *The Legend of Zelda: The Minish Cap* into clean, matching C code.
+* **[999sian](https://github.com/999sian) & Contributors ([Project Picori](https://github.com/999sian/tmc))**: Creators of the original native PC port, developing the software PPU rasterizer, SDL3 integration, audio engine, and PC features.
+* **[lorencouse](https://github.com/lorencouse) ([lorencouse/tmc](https://github.com/lorencouse/tmc) & [muos-rg35xx-sp-picori](https://github.com/lorencouse/muos-rg35xx-sp-picori))**: Created the handheld fork with linear audio resampling (44.1 kHz), screen UI scaling, SDL3-on-SDL2 runtime shim, and reference PortMaster packaging.
+* **[PortMaster Community](https://portmaster.games/)**: The framework, scripts, and runtime utilities (`gptokeyb2`, `libinterpose`) that make native ports possible on retro handhelds.
+* **KNULLI OS & Trimui Smart Pro Community**: Testing, packaging, and verifying native compatibility for the Trimui Smart Pro (Allwinner A133P / 1280×720).
+
+---
 
 ## 📜 License / Licença
 
