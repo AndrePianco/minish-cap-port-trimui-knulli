@@ -9,6 +9,14 @@ PortMaster packaging of [Project Picori](https://github.com/999sian/tmc) (*The L
 <a name="english"></a>
 ## 🇬🇧 English
 
+### 💡 What is this project? (Explained Simply)
+Normally, retro handheld consoles run Game Boy Advance games using an **emulator** (software that simulates the entire original GBA hardware).
+
+This project is **different — it is a Native PC/Handheld Port**:
+* **Native Execution**: The original game code was decompiled and rebuilt to run **directly on the Trimui Smart Pro's ARM processor**, exactly like a native PC game, without needing any emulator.
+* **Why is that cool?**: It runs as a standalone app via **PortMaster**, allowing custom 4× integer scaling (960×640) for crisp, sharp visuals on the 720p screen without blurry bilinear stretching.
+* **Why do I still need a ROM?**: To respect Nintendo's intellectual property, this repository contains **only the open-source game engine**. No game graphics, music, or text are distributed here. When you provide your own GBA ROM once, the engine extracts the assets locally on your console and boots straight into the adventure!
+
 > [!WARNING]
 > **Early Build / Performance Notice:** This is an initial port release based directly on the native PC port (*Project Picori*). Because this early iteration relies on a CPU software rasterizer running on handheld ARM hardware via an SDL3 compatibility shim, you may encounter performance bottlenecks, occasional frame drops, and audio stuttering in demanding scenes. Future performance improvements and optimizations are still being explored.
 
@@ -54,6 +62,14 @@ Configured via `gptokeyb2`:
 
 <a name="português"></a>
 ## 🇧🇷 Português
+
+### 💡 O que é este projeto? (Explicado de forma simples)
+Normalmente, consoles portáteis como o Trimui Smart Pro rodam jogos de Game Boy Advance através de um **emulador** (um programa que imita o videogame antigo rodando por cima do sistema).
+
+Este projeto é **diferente — é um Port Nativo**:
+* **Sem emulador**: O código-fonte original de *The Legend of Zelda: The Minish Cap* foi reconstruído por engenharia reversa (descompilação) e recompilado para rodar **diretamente no processador do Trimui Smart Pro**, como se fosse um jogo de PC feito nativamente para ele.
+* **Qual a vantagem?**: Ele roda como um jogo próprio via **PortMaster**, aproveitando a tela de 1280×720 com resolução pixel-perfect (escala 4× de 960×640), deixando a imagem super nítida e sem o borrão de estiramento dos emuladores.
+* **Por que ainda preciso da ROM?**: Por respeito aos direitos autorais da Nintendo, este projeto disponibiliza **apenas o motor do jogo (código)**. Nenhuma imagem, música ou texto protegido está incluso. Ao colocar sua própria ROM do jogo uma única vez, o motor extrai os arquivos necessários diretamente no aparelho e inicia a aventura!
 
 > [!WARNING]
 > **Versão Inicial / Aviso de Desempenho:** Esta é uma versão inicial adaptada diretamente do port nativo de PC (*Project Picori*). Por ser uma versão preliminar rodando através de rasterizador por software na CPU do console portátil (Allwinner A133P) e via shim de compatibilidade SDL3, o jogo apresenta problemas e oscilações de desempenho (quedas de FPS e eventuais engasgos no áudio em cenas mais pesadas). Melhorias e otimizações de performance continuam em andamento.
