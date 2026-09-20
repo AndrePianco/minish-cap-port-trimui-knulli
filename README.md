@@ -9,6 +9,9 @@ PortMaster packaging of [Project Picori](https://github.com/999sian/tmc) (*The L
 <a name="english"></a>
 ## 🇬🇧 English
 
+> [!WARNING]
+> **Early Build / Performance Notice:** This is an initial port release based directly on the native PC port (*Project Picori*). Because this early iteration relies on a CPU software rasterizer running on handheld ARM hardware via an SDL3 compatibility shim, you may encounter performance bottlenecks, occasional frame drops, and audio stuttering in demanding scenes. Future performance improvements and optimizations are still being explored.
+
 ### 🎮 How to Run
 
 #### 1. Requirements
@@ -51,6 +54,9 @@ Configured via `gptokeyb2`:
 
 <a name="português"></a>
 ## 🇧🇷 Português
+
+> [!WARNING]
+> **Versão Inicial / Aviso de Desempenho:** Esta é uma versão inicial adaptada diretamente do port nativo de PC (*Project Picori*). Por ser uma versão preliminar rodando através de rasterizador por software na CPU do console portátil (Allwinner A133P) e via shim de compatibilidade SDL3, o jogo apresenta problemas e oscilações de desempenho (quedas de FPS e eventuais engasgos no áudio em cenas mais pesadas). Melhorias e otimizações de performance continuam em andamento.
 
 ### 🎮 Como Jogar / Instalar
 
