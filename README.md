@@ -1,72 +1,119 @@
-# minish-cap-port-trimui-knulli
+# The Legend of Zelda: The Minish Cap — PortMaster (Trimui Smart Pro + KNULLI)
 
 PortMaster packaging of [Project Picori](https://github.com/999sian/tmc) (*The Legend of Zelda: The Minish Cap* native PC port), tailored and tested for the **Trimui Smart Pro** running **KNULLI OS** (Allwinner A133P / aarch64 / 1280×720).
-The player-facing README is [`port/README.md`](port/README.md).
 
-![The Minish Cap running on an RG35XX SP](docs/img/social-preview.png)
+[English](#english) | [Português](#português)
 
-## Layout
+---
 
-```
-port/                                   the package, as PortMaster wants it
-  Legend of Zelda - The Minish Cap.sh   launcher
+<a name="english"></a>
+## 🇬🇧 English
+
+### 🎮 How to Run
+
+#### 1. Requirements
+* A **Trimui Smart Pro** running **KNULLI** (or compatible `aarch64` handheld running PortMaster).
+* A legally acquired Game Boy Advance ROM of *The Legend of Zelda: The Minish Cap*:
+  * `baserom.gba` (USA version — recommended)
+  * `baserom_eu.gba` (European version)
+  * `baserom_jp.gba` (Japanese version)
+  * *Note: No copyrighted ROM files or Nintendo game assets are included in this repository.*
+
+#### 2. Installation
+1. **Download the Port**: Grab the latest `picori.zip` from the [Releases](../../releases) tab (or build it yourself using `./build.sh 2.0.0`).
+2. **Extract to Ports directory**:
+   * On KNULLI: extract the contents of `picori.zip` into `/userdata/roms/ports/`.
+   * You should have:
+     * `/userdata/roms/ports/Legend of Zelda - The Minish Cap.sh`
+     * `/userdata/roms/ports/picori/` (containing `tmc_pc.aarch64`, `libs.aarch64/`, etc.)
+3. **Add your GBA ROM**:
+   * Copy your ROM file to `/userdata/roms/ports/picori/baserom.gba`.
+4. **Update Gamelist & Play**:
+   * On your device, press **Start** in EmulationStation → **Game Settings** → **Update Gamelists**.
+   * Launch **The Legend of Zelda: The Minish Cap** from the **Ports** collection.
+   * On the first boot, the engine will automatically extract the sound and graphic assets from your ROM (takes ~5–10 seconds) and launch directly into the game.
+
+#### 🕹️ Controls (Trimui Smart Pro)
+Configured via `gptokeyb2`:
+* **D-Pad / Left Analog Stick**: Movement
+* **A Button**: Interact / Roll / Confirm
+* **B Button**: Sword / Cancel
+* **X / Y Buttons**: Assigned items
+* **L1 / R1**: Shield / Items
+* **Start**: Pause / Status Menu
+* **Select**: Inventory / Map
+* **Select + Start**: Exit Game
+
+> [!IMPORTANT]
+> **Renderer Warning:** Keep the in-game `render_backend` set to **`software`** (default). Do **NOT** switch to GPU rasterizer on handheld devices, as OpenGL desktop shaders are not supported via the SDL3-on-SDL2 shim and will prevent the game from starting.
+
+---
+
+<a name="português"></a>
+## 🇧🇷 Português
+
+### 🎮 Como Jogar / Instalar
+
+#### 1. Requisitos
+* Um **Trimui Smart Pro** rodando o sistema **KNULLI** (ou console portátil `aarch64` compatível com PortMaster).
+* Uma cópia da ROM de Game Boy Advance do *The Legend of Zelda: The Minish Cap*:
+  * `baserom.gba` (Versão Americana — recomendada)
+  * `baserom_eu.gba` (Versão Europeia)
+  * `baserom_jp.gba` (Versão Japonesa)
+  * *Aviso: Nenhum arquivo de ROM ou asset proprietário da Nintendo está incluso neste repositório.*
+
+#### 2. Passo a Passo de Instalação
+1. **Baixar o Port**: Baixe o `picori.zip` mais recente na aba de [Releases](../../releases) (ou gere pelo script `./build.sh 2.0.0`).
+2. **Copiar para a pasta de Ports**:
+   * No KNULLI: extraia o conteúdo do `picori.zip` direto em `/userdata/roms/ports/`.
+   * A estrutura de pastas deve ficar assim:
+     * `/userdata/roms/ports/Legend of Zelda - The Minish Cap.sh`
+     * `/userdata/roms/ports/picori/` (com `tmc_pc.aarch64`, `libs.aarch64/`, etc.)
+3. **Colocar a ROM do GBA**:
+   * Coloque a sua ROM dentro da pasta `/userdata/roms/ports/picori/` renomeada para `baserom.gba`.
+4. **Atualizar a lista de jogos e Jogar**:
+   * No Trimui, aperte **Start** no menu principal → **Game Settings** → **Update Gamelists**.
+   * Abra **The Legend of Zelda: The Minish Cap** na aba de **Ports**.
+   * No primeiro carregamento, o port extrairá automaticamente as músicas e gráficos da ROM (leva apenas ~5 a 10 segundos) e abrirá o jogo diretamente em tela cheia!
+
+#### 🕹️ Mapeamento de Controles (Trimui Smart Pro)
+Mapeados através do `gptokeyb2`:
+* **D-Pad / Analógico Esquerdo**: Movimentação
+* **Botão A**: Interagir / Rolar / Confirmar
+* **Botão B**: Espada / Cancelar
+* **Botões X / Y**: Itens equipados
+* **L1 / R1**: Escudo / Itens secundários
+* **Start**: Pausar / Menu de Status
+* **Select**: Inventário / Mapa
+* **Select + Start**: Sair do jogo
+
+> [!IMPORTANT]
+> **Aviso sobre o Renderizador:** Mantenha a opção de renderizador em **`software`** (padrão). **NÃO** mude para GPU nas opções dentro do jogo; no Trimui Smart Pro o renderizador por software roda a 60 FPS cravados e a GPU trava pelo shim SDL3-sobre-SDL2.
+
+---
+
+## 🛠️ Project Structure / Estrutura do Projeto
+
+```text
+port/                                   The PortMaster package / O pacote PortMaster
+  Legend of Zelda - The Minish Cap.sh   Launcher script with 720p 4x integer scaling
   port.json  gameinfo.xml  README.md  screenshot.png  cover.png
   picori/
-    config.json                         shipped settings (keyboard bindings only)
-    picori.ini                          gptokeyb2 keyboard map
-    licenses/
-    tmc_pc.aarch64                      added by build.sh, not in git
-    libs.aarch64/libSDL3.so.0           added by build.sh, not in git
-build.sh                                assembles dist/<version>/picori.zip
-.github/workflows/release.yml           builds the shim and the zip on a v* tag
-tools/grab-screen.sh                    fb0 screenshot over adb
-tools/stage-portmaster.sh               unpack a built zip into a PortMaster-New checkout
-tools/bullseye-arm64.Dockerfile         local aarch64 build image for tmc_pc
-docs/portmaster-pr.md                   PR text, the non-standard launcher lines, submission steps
-docs/weston-port-notes.md               notes from the earlier weston-based launcher
+    config.json                         Preconfigured settings (software renderer, 60fps)
+    picori.ini                          gptokeyb2 controller mapping
+    licenses/                           Open source licenses
+    tmc_pc.aarch64                      Native engine (added by build.sh)
+    libs.aarch64/libSDL3.so.0           SDL3-on-SDL2 shim
+build.sh                                Assembles dist/<version>/picori.zip
+Dockerfile.arm64-bullseye               Debian bullseye builder container (glibc 2.31)
 ```
 
-## How it runs
+## ⚙️ How it runs / Como Funciona
 
-`tmc_pc` is an SDL3 program. The handhelds ship SDL2, so the package runs it
-against the [SDL3-on-SDL2 shim](https://github.com/bmdhacks/SDL/tree/sdl2-backend)
-(`libs.aarch64/libSDL3.so.0`), the same way the Insaniquarium, Arcanum CE and
-Open Chaos ports do. That needs a `tmc_pc` linked against a *shared* SDL3,
-which the fork builds when `TMC_SDL3_SHARED=1` (linux-arm64 leg of its CI).
+* **Engine**: `tmc_pc` é um executável SDL3 nativo compilado para `linux-arm64` a partir da branch `rg35xx-sp-audio-ui` do [lorencouse/tmc](https://github.com/lorencouse/tmc).
+* **Compatibilidade**: Os portáteis usam SDL2 nativo. O pacote inclui o shim `libSDL3.so.0` para traduzir as chamadas da SDL3 diretamente para a SDL2 do Knulli em tempo de execução.
+* **Resolução**: Em telas 1280×720 (Trimui Smart Pro), o launcher ativa automaticamente o **integer scaling 4×** (960×640) com pixels perfeitos e sem borrão bilinear.
 
-Input goes through gptokeyb2 as a keyboard: the port's save-state and
-fast-forward actions are keyboard-only, and `config.json` ships without its
-gamepad bindings so a button is not seen twice.
+## 📜 License / Licença
 
-## Build
-
-```sh
-./build.sh 2.0.0                       # dist/2.0.0/picori.zip
-TMC_BINARY=./tmc_pc SDL3SHIM_LIB=./libSDL3.so.0 ./build.sh 2.0.0-dev
-```
-
-`build.sh` downloads `tmc_pc` from the fork release named by `TMC_TAG`
-(pinned by tag and SHA-256 in `build.sh`) and the shim from this repo's `sdl3shim` release
-unless both are given locally. Pushing a `v*` tag runs the workflow, which
-builds the shim in a Debian bullseye arm64 container (glibc 2.31) and attaches
-`picori.zip` and `libSDL3.so.0` to the release.
-
-## Where the binary comes from
-
-`tmc_pc` is built from the `rg35xx-sp-audio-ui` branch of
-[lorencouse/tmc](https://github.com/lorencouse/tmc), a fork of 999sian/tmc
-that adds a linear audio resampler, a 44.1 kHz synth rate, a UI scale for
-small screens and a stretch aspect mode. Its CI builds the linux-arm64 leg
-in a bullseye container so the binary loads on old CFW glibc.
-
-## Status
-
-Packaged to the PortMaster template (launcher, port.json v4, gptokeyb2 ini,
-licences, README sections). Tested on the RG35XX SP under muOS by the porter,
-and by testers on Knulli (TrimUI Pro S, 1280x720), AmberELEC (R36S) and muOS
-(TrimUI Smart Pro). ArkOS and ROCKNIX are untested. `docs/portmaster-pr.md`
-has the PR text and what remains before opening it.
-
-## Licence
-
-GPL-3.0-or-later, same as Project Picori. No game data is included.
+GPL-3.0-or-later, mesma licença do Project Picori. Nenhum dado proprietário do jogo está incluído.
