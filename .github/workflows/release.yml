@@ -103,6 +103,7 @@ jobs:
           TAG="${{ inputs.tag || github.ref_name }}"
           # Empty TMC_TAG lets build.sh use its pinned default (tag + sha).
           [ -n "$TMC_TAG" ] || TMC_TAG="$(sed -n 's/^TMC_TAG="\${TMC_TAG:-\(.*\)}"$/\1/p' build.sh)"
+          chmod +x build.sh
           SDL3SHIM_LIB=shim/libSDL3.so.0 ./build.sh "${TAG#v}"
           cp "dist/${TAG#v}/picori.zip" picori.zip
           cp shim/libSDL3.so.0 libSDL3.so.0
@@ -112,6 +113,7 @@ jobs:
         with:
           tag_name: ${{ inputs.tag || github.ref_name }}
           body_path: notes.md
+          append_body: true
           files: |
             picori.zip
             libSDL3.so.0
