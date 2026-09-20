@@ -1,0 +1,78 @@
+# Dockerfile.arm64-bullseye
+#
+# Replica o ambiente CI do fork lorencouse/tmc (_build.yaml, leg linux_arm):
+#   - debian:bullseye  →  glibc 2.31  (roda em qualquer CFW portmaster incl. glibc 2.40)
+#   - aarch64 nativo  (use `docker buildx build --platform linux/arm64` ou runner arm64)
+#   - TMC_SDL3_SHARED=1: SDL3 compilada como .so separada p/ usar o shim no dispositivo
+#
+# Build:
+#   docker buildx build --platform linux/arm64 -t tmc-builder -f Dockerfile.arm64-bullseye .
+#
+# Uso:
+#   docker run --rm --platform linux/arm64 \
+#     -v /path/to/tmc-src:/src \
+#     -v /path/to/output:/out \
+#     tmc-builder
+
+FROM debian:bullseye
+
+# bullseye saiu do LTS em agosto/2026 — usar snapshot fixo para evitar
+# arquivos Release expirados no CDN Fastly.
+RUN echo 'Acquire::Check-Valid-Until "false";' > /etc/apt/apt.conf.d/99no-check-valid-until \
+ && echo 'Acquire::Retries "5";' > /etc/apt/apt.conf.d/99retries \
+ && SNAP=20260901T000000Z \
+ && printf '%s\n' \
+      "deb http://snapshot.debian.org/archive/debian/$SNAP bullseye main" \
+      "deb http://snapshot.debian.org/archive/debian-security/$SNAP bullseye-security main" \
+    > /etc/apt/sources.list \
+ && apt-get update \
+ && apt-get install -y --no-install-recommends \
+      git ca-certificates curl wget sudo xz-utils unzip zip \
+      python3 python3-pip build-essential pkg-config \
+      libpng-dev libfmt-dev nlohmann-json3-dev \
+      libx11-dev libxext-dev libxrender-dev libxcursor-dev \
+      libasound2-dev libpulse-dev \
+      xutils-dev xorg-dev autoconf automake libtool ninja-build \
+      libegl-dev libgles-dev cmake \
+ && rm -rf /var/lib/apt/lists/*
+
+# pipewire >= 0.3.20 necessário para SDL3 compilar o backend pipewire.
+# bullseye ships 0.3.19 — backports tem 0.3.65+.
+# bullseye-backports foi arquivado: tentar cada mirror em sequência.
+RUN set -eux; \
+    for bp in \
+      'http://snapshot.debian.org/archive/debian/20260601T000000Z bullseye-backports' \
+      'http://deb.debian.org/debian bullseye-backports' \
+      'http://archive.debian.org/debian-backports bullseye-backports' \
+      'http://archive.debian.org/debian bullseye-backports'; do \
+      echo "deb $bp main" > /etc/apt/sources.list.d/backports.list; \
+      if apt-get update -qq 2>/dev/null; then break; fi; \
+      rm -f /etc/apt/sources.list.d/backports.list; \
+    done; \
+    if [ -f /etc/apt/sources.list.d/backports.list ]; then \
+      apt-get install -y -t bullseye-backports libpipewire-0.3-dev; \
+    else \
+      apt-get install -y libpipewire-0.3-dev; \
+    fi \
+ && rm -rf /var/lib/apt/lists/*
+
+# meson >= 0.64 necessário para Wayland (dep transitiva do SDL3).
+# bullseye tem meson 0.56 → instalar via pip.
+RUN pip3 install --upgrade 'meson>=1.4'
+
+# xmake: instalar a versão mais recente disponível para o CI.
+# xmake recusa rodar como root por padrão → XMAKE_ROOT=y contorna isso.
+RUN curl -fsSL https://xmake.io/shget.text | bash \
+ && /root/.local/bin/xmake --version || true
+
+ENV PATH="/root/.local/bin:$PATH"
+ENV XMAKE_ROOT=y
+ENV TMC_SDL3_SHARED=1
+
+# git: marcar todos os diretórios como seguros (necessário quando o checkout
+# pertence a uid diferente dentro do container).
+RUN git config --global --add safe.directory '*'
+
+WORKDIR /src
+
+CMD ["bash", "-c", "python3 build.py --usa -j$(nproc) && echo 'BUILD OK'"]

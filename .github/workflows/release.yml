@@ -1,0 +1,117 @@
+name: Build package
+
+# Builds the SDL3-on-SDL2 shim for aarch64 (debian bullseye, glibc 2.31) and
+# assembles picori.zip around the tmc_pc release of the fork.
+#
+#   tag push v*        -> release with picori.zip + libSDL3.so.0
+#   workflow_dispatch  -> same, attached to the given tag; or shim only
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Release tag to attach the package to (created at HEAD if missing)"
+        required: true
+        type: string
+      tmc_tag:
+        description: "lorencouse/tmc release tag to take tmc_pc from (empty = build.sh default)"
+        required: false
+        default: ""
+        type: string
+      shim_only:
+        description: "Build and upload the shim artifact only, no zip or release"
+        required: false
+        default: false
+        type: boolean
+
+permissions:
+  contents: write
+
+jobs:
+  shim:
+    name: SDL3 shim (aarch64, bullseye)
+    runs-on: ubuntu-22.04-arm
+    container: debian:bullseye
+    steps:
+      - name: Toolchain
+        run: |
+          set -eux
+          # bullseye is out of LTS and the Debian CDN 404s on its security pool
+          # files from GitHub's runners; snapshot.debian.org pins one dated set.
+          echo 'Acquire::Check-Valid-Until "false";' > /etc/apt/apt.conf.d/99no-check-valid-until
+          echo 'Acquire::Retries "5";' > /etc/apt/apt.conf.d/99retries
+          SNAP=20260901T000000Z
+          printf '%s\n' \
+            "deb http://snapshot.debian.org/archive/debian/$SNAP bullseye main" \
+            "deb http://snapshot.debian.org/archive/debian-security/$SNAP bullseye-security main" \
+            > /etc/apt/sources.list
+          apt-get update
+          apt-get install -y --no-install-recommends git ca-certificates build-essential cmake ninja-build pkg-config
+      - name: Sources
+        run: |
+          set -eux
+          git clone --depth 1 --recursive -b sdl2-backend https://github.com/bmdhacks/SDL.git sdl
+          git clone --depth 1 https://github.com/KhronosGroup/SPIRV-Cross.git spirv-cross
+          git -C sdl rev-parse HEAD > shim-commit.txt
+      - name: Build
+        run: |
+          set -eux
+          cmake -S sdl -B sdl/build -G Ninja \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_C_FLAGS="-march=armv8-a" \
+            -DSDL_SDL2_BACKEND=ON \
+            -DSDL_SPIRV_CROSS_DIR="$PWD/spirv-cross" \
+            -DSDL_X11=OFF -DSDL_WAYLAND=OFF -DSDL_KMSDRM=OFF \
+            -DSDL_PIPEWIRE=OFF -DSDL_PULSEAUDIO=OFF -DSDL_ALSA=OFF \
+            -DSDL_SNDIO=OFF -DSDL_OSS=OFF -DSDL_JACK=OFF \
+            -DSDL_OFFSCREEN=OFF -DSDL_DUMMYVIDEO=OFF \
+            -DSDL_DUMMYAUDIO=OFF -DSDL_DISKAUDIO=OFF \
+            -DSDL_VULKAN=OFF -DSDL_GPU=ON -DSDL_RENDER_GPU=ON \
+            -DSDL_UNIX_CONSOLE_BUILD=ON \
+            -DSDL_TESTS=OFF -DSDL_EXAMPLES=OFF
+          cmake --build sdl/build --parallel "$(nproc)"
+          lib="$(ls sdl/build/libSDL3.so.0.* | head -1)"
+          cp -L "$lib" libSDL3.so.0
+          strip --strip-unneeded libSDL3.so.0
+          echo "== NEEDED =="; objdump -p libSDL3.so.0 | awk '/NEEDED/ {print "  " $2}'
+          echo "glibc floor: $(objdump -T libSDL3.so.0 | grep -oE 'GLIBC_[0-9.]+' | sort -uV | tail -1)"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: sdl3shim
+          path: |
+            libSDL3.so.0
+            shim-commit.txt
+
+  package:
+    name: picori.zip
+    needs: shim
+    if: ${{ !inputs.shim_only }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: sdl3shim
+          path: shim
+      - name: Build zip
+        env:
+          TMC_TAG: ${{ inputs.tmc_tag }}
+        run: |
+          set -eux
+          TAG="${{ inputs.tag || github.ref_name }}"
+          # Empty TMC_TAG lets build.sh use its pinned default (tag + sha).
+          [ -n "$TMC_TAG" ] || TMC_TAG="$(sed -n 's/^TMC_TAG="\${TMC_TAG:-\(.*\)}"$/\1/p' build.sh)"
+          SDL3SHIM_LIB=shim/libSDL3.so.0 ./build.sh "${TAG#v}"
+          cp "dist/${TAG#v}/picori.zip" picori.zip
+          cp shim/libSDL3.so.0 libSDL3.so.0
+          echo "shim built from bmdhacks/SDL@$(cat shim/shim-commit.txt)" > notes.md
+          echo "tmc_pc from lorencouse/tmc ${TMC_TAG}" >> notes.md
+      - uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ inputs.tag || github.ref_name }}
+          body_path: notes.md
+          files: |
+            picori.zip
+            libSDL3.so.0

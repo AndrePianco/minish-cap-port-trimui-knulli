@@ -1,0 +1,5 @@
+dist/
+.cache/
+tools/git/
+.DS_Store
+*.gba

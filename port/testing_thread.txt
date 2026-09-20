@@ -1,0 +1,44 @@
+Instructions to install the Testing Zip:
+Drop the .zip into your Portmaster autoinstall folder and run Portmaster.
+or
+run via ssh: harbourmaster install "zip url from discord"
+
+Game Information
+Title: The Legend of Zelda: The Minish Cap (Project Picori)
+URL: https://github.com/lorencouse/tmc/tree/rg35xx-sp-audio-ui
+
+Instructions:
+Not ready to run. Copy your Minish Cap ROM to ports/picori as baserom.gba (USA), baserom_eu.gba or baserom_jp.gba. The first launch extracts assets from the ROM.
+
+| Button | Action |
+|--|--|
+| D-pad | Move |
+| A | Sword / confirm |
+| B | Item / cancel |
+| X | Save-state picker, ready to save |
+| Y | Save-state picker, ready to load |
+| L1 | GBA L |
+| R1 | GBA R |
+| L2 | Save a state to a new slot |
+| R2 (hold) | Fast-forward |
+| Start | Pause menu |
+| Select | Select |
+| Menu | Port settings |
+| Start + Select | Quit |
+
+CFW Tests:
+[ ] ArkOS
+[x] AmberELEC (R36S, Kdog)
+[ ] dArkOS
+[x] MuOS (RG35XX SP, porter; TrimUI Smart Pro, EpicNoob)
+ROCKNIX
+-> [ ] Libmali
+-> [ ] Panfrost
+-> [ ] Adreno (Optional)
+[x] Knulli (TrimUI Pro S, Kdog)
+
+Resolutions:
+[ ] 480x320 (Optional)
+[x] 640x480
+[ ] 720x720 (RGB30) (Optional)
+[x] Higher resolutions (e.g., 1280) (TrimUI Pro S and Smart Pro)

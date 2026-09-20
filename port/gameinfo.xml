@@ -1,0 +1,13 @@
+<?xml version='1.0' encoding='utf-8'?>
+<gameList>
+  <game>
+    <path>./Legend of Zelda - The Minish Cap.sh</path>
+    <name>The Legend of Zelda - The Minish Cap</name>
+    <desc>The sorcerer Vaati has shattered the Picori Blade and turned Princess Zelda to stone. Link sets out with Ezlo, a talking cap who can shrink him to the size of the Picori, to reforge the blade and undo the curse. Shrinking turns puddles into lakes and floorboards into canyons, and the same room read at two scales hides most of the game's secrets. Fuse Kinstones with the people of Hyrule to open the rest.</desc>
+    <image>./picori/cover.png</image>
+    <releasedate>20041104T000000</releasedate>
+    <developer>Flagship / Capcom</developer>
+    <publisher>Nintendo</publisher>
+    <genre>Action / Adventure</genre>
+  </game>
+</gameList>
